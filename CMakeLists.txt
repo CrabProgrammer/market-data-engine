@@ -37,4 +37,7 @@ FetchContent_MakeAvailable(googletest)
 
 enable_testing()
 include(GoogleTest)
+add_library(mde src/l2_book.cpp)
+target_include_directories(mde PUBLIC include)
+target_link_libraries(mde PRIVATE mde_warnings)
 add_subdirectory(tests)
