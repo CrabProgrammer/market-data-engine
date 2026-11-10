@@ -3,8 +3,8 @@
 namespace mde {
 
 L2Book::L2Book(std::size_t depth) : depth_(depth) {
-    bids_.reserve(depth + 1);   // +1: room for the insert before truncation
-    asks_.reserve(depth + 1);
+    bids_.reserve(depth);   // pop_back() before emplace
+    asks_.reserve(depth);
 }
 
 void L2Book::apply(Side side, Price price, Qty qty) {
