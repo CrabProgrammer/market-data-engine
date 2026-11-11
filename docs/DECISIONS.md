@@ -28,3 +28,22 @@
   can change (e.g. to a fixed-size `std::array`) without changing the interface.
   Like a reference, it doesn't own the data: it is valid only while the book exists,
   and `apply()` changes what it shows.
+
+## D3 — Prices and quantities are signed int64_t ticks
+
+- **Why not double?** You can't store a price like 0.1 exactly in binary, so the same
+price can come out as two slightly different doubles. Then `==` stops working: an
+update doesn't find its level, the old level stays in the book, and the checksum fails.
+With integer ticks, equal prices are always equal.
+
+- **Why 64-bit?** Quantities have 8 decimals. An int32 tops out around 2.1 billion,
+which is only 21.47 BTC. A single 50 BTC level wouldn't fit. int64 has plenty of room.
+
+- **Why signed?** If a quantity ever goes below zero, say from a bug or a message
+arriving out of order, I want to see a negative number and catch it with an assert.
+An unsigned value would quietly wrap around to a huge number that looks perfectly valid.
+
+- **Parsing:** `parse_ticks` turns the text straight into ticks with `std::from_chars`,
+so a double never gets involved. The number of decimals comes from the instrument
+(Kraken's `instrument` channel says 1 for price and 8 for qty on BTC/USD).
+Anything outside 0–18 is rejected.
