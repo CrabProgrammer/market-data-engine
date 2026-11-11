@@ -3,7 +3,7 @@
 namespace mde {
 
 L2Book::L2Book(std::size_t depth) : depth_(depth) {
-    bids_.reserve(depth);   // pop_back() before emplace
+    bids_.reserve(depth);   // pop_back() before emplaceg
     asks_.reserve(depth);
 }
 
