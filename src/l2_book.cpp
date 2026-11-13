@@ -45,7 +45,11 @@ void L2Book::apply(Side side, Price price, Qty qty) {
     {
         sideArray.emplace_back(price, qty);
     }
-} 
+}
+
+void L2Book::apply(const L2Update& update) {
+    apply(update.side,update.price,update.qty); 
+}
 
 std::optional<Level> L2Book::bestBid() const { 
     if(!bids_.empty()) return bids_.front();
@@ -55,5 +59,5 @@ std::optional<Level> L2Book::bestAsk() const {
     return std::nullopt; }
 std::span<const Level> L2Book::bids() const { return bids_; }
 std::span<const Level> L2Book::asks() const { return asks_; }
-
 }  // namespace mde
+

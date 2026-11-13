@@ -100,3 +100,9 @@ TEST(L2Book, BetterAskAtFullDepthOverrides) {
     book.apply(Side::Bid, 140, 1);
     EXPECT_EQ(toVec(book.bids()), (Levels{{140,1}, {130,1}, {120,1}}));
 }
+
+TEST(L2BookTest, ApplyL2UpdateAddsBid) {
+    L2Book book(1);
+    book.apply(mde::L2Update{mde::Side::Bid, 1000, 5});
+    EXPECT_EQ(toVec(book.bids()), (Levels{{1000,5}}));
+}
