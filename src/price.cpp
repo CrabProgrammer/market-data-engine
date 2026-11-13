@@ -48,6 +48,10 @@ std::optional<std::int64_t> parse_ticks(std::string_view text, int decimals) {
     
     for(std::size_t i = 0; i < dec; ++i)
     {
+        if(result > INT64_MAX / 10)
+        {
+            return std::nullopt;
+        }
         result*=10;
     }
     
@@ -64,6 +68,11 @@ std::optional<std::int64_t> parse_ticks(std::string_view text, int decimals) {
         {
             fraction/=10;
         }
+    }
+
+    if(result > INT64_MAX - fraction)
+    {
+        return std::nullopt;
     }
     result+=fraction;
     

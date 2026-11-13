@@ -2,8 +2,6 @@
 #include "mde/price.hpp"
 
 using mde::parse_ticks;
-constexpr int kPriceDecimals = 1;
-constexpr int kQtyDecimals = 8;
 
 TEST(ParseTick, OneDecimal) {
     auto result = parse_ticks("65432.1", 1);
@@ -62,5 +60,25 @@ TEST(ParseTick, DecimalsZeroRejectsNonZeroFraction) {
 
 TEST(ParseTick, NegativeDecimalsRejected) {
     auto result = parse_ticks("5.0", -1);
+    EXPECT_EQ(result, std::nullopt);
+}
+
+TEST(ParseTick, TwentyDigitsRejected) {
+    auto result = parse_ticks("99999999999999999999", 0);
+    EXPECT_EQ(result, std::nullopt);
+}
+
+TEST(ParseTick, ScaleOverflowRejected) {
+    auto result = parse_ticks("922337203685477581", 1);
+    EXPECT_EQ(result, std::nullopt);
+}
+
+TEST(ParseTick, MaxInt64Accepted) {
+    auto result = parse_ticks("922337203685477580.7", 1);
+    EXPECT_EQ(result, 9223372036854775807);
+}
+
+TEST(ParseTick, Int64OverflowRejected) {
+    auto result = parse_ticks("922337203685477580.8", 1);
     EXPECT_EQ(result, std::nullopt);
 }
