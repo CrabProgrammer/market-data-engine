@@ -47,3 +47,21 @@ An unsigned value would quietly wrap around to a huge number that looks perfectl
 so a double never gets involved. The number of decimals comes from the instrument
 (Kraken's `instrument` channel says 1 for price and 8 for qty on BTC/USD).
 Anything outside 0–18 is rejected.
+
+## D4 — `L2Update` is owned by the book (SOLID D)
+
+`L2Update` (side, price in ticks, qty in ticks; qty 0 = remove the level) is the type
+between the order book and the exchange code. The book's side defines it, in its own
+words; the Kraken adapter translates Kraken's messages into it.
+- `l2_book.hpp` never includes anything about Kraken or JSON.
+- Book tests build updates directly, without JSON.
+- A new venue (or the ITCH replay) needs only a new adapter; the book doesn't change.
+
+It's a plain struct, not a virtual interface, so there's no virtual call on the hot path.
+
+## D5 — CRC32 from zlib
+
+I don't write CRC32 myself: zlib's `crc32` is free, standard and well tested,
+and my own version would add risk and time for no benefit.
+My part is preparing the data: the checksum string from the book
+(top 10 asks, then top 10 bids, price and qty in ticks as text)
