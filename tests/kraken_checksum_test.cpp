@@ -5,7 +5,7 @@
 namespace {
 // Kraken docs, book checksum v2 example (ticks: price x10, qty x10^8)
 mde::L2Book docs_example_book(std::size_t depth = 10) {
-    mde::L2Book book{depth};   // ← adjust to your constructor
+    mde::L2Book book{depth};
     const std::int64_t bids[10][2] = {
         {452835, 10000000}, {452834, 154582015}, {452821, 10000000}, {452810, 10000000},
         {452803, 154592586}, {452790, 7990000}, {452776, 3310103}, {452775, 30000000},
