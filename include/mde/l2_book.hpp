@@ -23,6 +23,7 @@ public:
     explicit L2Book(std::size_t depth);
     void apply(Side side, Price price, Qty qty);   // qty is absolute; 0 = remove
     void apply(const L2Update& update);   
+    void clear() noexcept;
     std::optional<Level> bestBid() const;
     std::optional<Level> bestAsk() const;
     std::span<const Level> bids() const;           // best first

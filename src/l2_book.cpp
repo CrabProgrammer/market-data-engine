@@ -51,6 +51,11 @@ void L2Book::apply(const L2Update& update) {
     apply(update.side,update.price,update.qty); 
 }
 
+void L2Book::clear() noexcept {
+    bids_.clear();
+    asks_.clear();
+}
+
 std::optional<Level> L2Book::bestBid() const { 
     if(!bids_.empty()) return bids_.front();
     return std::nullopt; }
