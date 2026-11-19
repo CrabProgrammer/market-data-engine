@@ -11,7 +11,6 @@ TEST(KrakenBook, KrakenSnapshotCorrect) {
     EXPECT_EQ(msg.updates.front(), (mde::L2Update{mde::Side::Bid, 452835, 10000000}));
 }
 
-
 TEST(KrakenBook, KrakenSnapshotQuotedCorrect) {
     mde::kraken::BookMessage msg;
     auto parseStatus = parse_book_message(fixtures::kSnapshotQuoted,1,8,msg);

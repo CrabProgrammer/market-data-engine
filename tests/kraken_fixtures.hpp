@@ -9,12 +9,14 @@ inline constexpr std::string_view kSnapshotQuoted = R"json({"channel":"book","ty
 
 inline constexpr std::string_view kUpdate = R"json({"channel":"book","type":"update","data":[{"symbol":"BTC/USD","bids":[{"price":45283.4,"qty":0},{"price":45276.0,"qty":0.25000000}],"asks":[{"price":45285.2,"qty":0.50000000}],"checksum":3563522991,"timestamp":"2026-11-16T10:00:00.000000Z"}]})json";
 
-inline constexpr std::string_view kUpdateBadQty =
-    R"json({"channel":"book","type":"update","data":[{"symbol":"BTC/USD","bids":[{"price":45283.4,"qty":0.1x}],"asks":[],"checksum":1}]})json";
+inline constexpr std::string_view kUpdateBadQty = R"json({"channel":"book","type":"update","data":[{"symbol":"BTC/USD","bids":[{"price":45283.4,"qty":0.1x}],"asks":[],"checksum":1}]})json";
 
 inline constexpr std::string_view kHeartbeat = R"json({"channel":"heartbeat"})json";
 
-inline constexpr std::string_view kSubscribeAck =
-    R"json({"method":"subscribe","result":{"channel":"book","depth":10,"snapshot":true,"symbol":"BTC/USD"},"success":true,"time_in":"2026-11-16T10:00:00.000000Z","time_out":"2026-11-16T10:00:00.000100Z"})json";
+inline constexpr std::string_view kSubscribeAck = R"json({"method":"subscribe","result":{"channel":"book","depth":10,"snapshot":true,"symbol":"BTC/USD"},"success":true,"time_in":"2026-11-16T10:00:00.000000Z","time_out":"2026-11-16T10:00:00.000100Z"})json";
 
-}  // namespace fixtures
+inline constexpr std::string_view kInstrumentSnapshot = R"({"channel":"instrument","type":"snapshot","data":{"assets":[],"pairs":[{"symbol":"BTC/USD","price_precision":1,"ws_display_price_precision":1,"qty_precision":8},{"symbol":"ETH/USD","price_precision":2,"ws_display_price_precision":2,"qty_precision":8}]}})";
+
+inline constexpr std::string_view kInstrumentUpdate = R"json({"channel":"instrument","type":"update","data":{"assets":[],"pairs":[{"symbol":"BTC/USD","price_precision":1,"ws_display_price_precision":1,"qty_precision":8}]}})json";
+
+}  // namespace fixtures    

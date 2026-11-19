@@ -65,3 +65,18 @@ I don't write CRC32 myself: zlib's `crc32` is free, standard and well tested,
 and my own version would add risk and time for no benefit.
 My part is preparing the data: the checksum string from the book
 (top 10 asks, then top 10 bids, price and qty in ticks as text)
+
+## D6. Reset on checksum mismatch
+
+On a mismatch, `BookSync` clears the book and forgets the snapshot; every update returns
+`UpdateBeforeSnapshot` until a new snapshot arrives, and the caller resubscribes.
+A mismatch means our book differs from Kraken's (a missed message, a bug in `apply`,
+wrong precision). Without the reset, later updates would be applied on top of a known-wrong
+book and could even pass the check again (test `UpdateAfterMismatchRejected`), so the
+strategy could trade on wrong data.
+
+## D7: Decimals from the instrument channel
+
+Price decimals: ws_display_price_precision, qty decimals: qty_precision.
+price_precision is the precision for order prices, not for the WebSocket feed.
+Checked on live BTC/USD and ETH/USD runs: 0 mismatches.

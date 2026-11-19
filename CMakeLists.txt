@@ -27,8 +27,9 @@ target_compile_options(mde_warnings INTERFACE
   -Wall -Wextra -Wpedantic -Wshadow -Werror=return-type
   $<$<BOOL:${MDE_WERROR}>:-Werror>)
 
-# GoogleTest
 include(FetchContent)
+
+# GoogleTest
 FetchContent_Declare(googletest
   URL https://github.com/google/googletest/archive/refs/tags/v1.17.0.tar.gz)
 set(INSTALL_GTEST OFF CACHE BOOL "" FORCE)
@@ -41,12 +42,28 @@ FetchContent_Declare(simdjson
 set(SIMDJSON_DEVELOPER_MODE OFF CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(simdjson)
 
-enable_testing()
-include(GoogleTest)
+# IXWebSocket: WebSocket + TLS client, used only by the live app.
+# SYSTEM = no warnings from its headers in our build.
+set(USE_TLS ON CACHE BOOL "" FORCE)
+set(USE_ZLIB OFF CACHE BOOL "" FORCE)   # no message compression needed
+FetchContent_Declare(ixwebsocket
+  GIT_REPOSITORY https://github.com/machinezone/IXWebSocket.git
+  GIT_TAG        v11.4.6
+  SYSTEM)
+FetchContent_MakeAvailable(ixwebsocket)
+
+# Core library: no network code in here.
 file(GLOB MDE_SOURCES CONFIGURE_DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
 add_library(mde ${MDE_SOURCES})
 find_package(ZLIB REQUIRED)
-target_link_libraries(mde PRIVATE ZLIB::ZLIB simdjson::simdjson)
 target_include_directories(mde PUBLIC include)
-target_link_libraries(mde PRIVATE mde_warnings)
+target_link_libraries(mde PRIVATE ZLIB::ZLIB simdjson::simdjson mde_warnings)
+
+# Tests
+enable_testing()
+include(GoogleTest)
 add_subdirectory(tests)
+
+# Live app: the only target that talks to the network.
+add_executable(kraken_live apps/kraken_live.cpp)
+target_link_libraries(kraken_live PRIVATE mde ixwebsocket mde_warnings)

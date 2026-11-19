@@ -39,7 +39,6 @@ ParseStatus parse_book_message(std::string_view json, int price_decimals, int qt
     // One parser per thread, reused: no allocation per message once it has grown.
     thread_local ondemand::parser parser;
     // simdjson needs a few padding bytes after the text; this copy adds them.
-    // (M3 can receive straight into a padded buffer and skip the copy.)
     const padded_string padded(json);
 
     out.updates.clear();
